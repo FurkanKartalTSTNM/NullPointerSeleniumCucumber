@@ -20,8 +20,6 @@ import org.openqa.selenium.WebDriver.Navigation;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.security.Credentials;
-import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -29,7 +27,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StepImpl {
+public class Steps {
 
   private Logger logger = LoggerFactory.getLogger(getClass());
   public WebDriver webDriver;
@@ -37,11 +35,10 @@ public class StepImpl {
   private final int timeOut = 30;
   private final int sleepTime = 150;
 
-  public StepImpl() {
+  public Steps() {
     this.webDriver = Hooks.getWebDriver();
     this.webDriverWait = new WebDriverWait(webDriver, timeOut, sleepTime);
   }
-
 
   public List<WebElement> finds(By by) {
     logger.debug("Find Element {}", by.toString());
@@ -101,38 +98,6 @@ public class StepImpl {
     return webElements;
   }
 
-  public WebElement findByVisible(By by) {
-    logger.debug("Find Element Visible {}", by.toString());
-    WebElement webElement = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
-    Assert.assertNotNull("WebElement Not Visible", webElement);
-    return webElement;
-  }
-
-  public List<WebElement> findsByVisible(By by) {
-    logger.debug("Find Elements Visible {}", by.toString());
-    List<WebElement> webElements = webDriverWait
-        .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
-    Assert.assertNotNull("WebElement Not Visible", webElements);
-    return webElements;
-  }
-
-  public WebElement findByPresence(By by) {
-    logger.debug("Find Element Presence {}", by.toString());
-    WebElement webElement = webDriverWait
-        .until(ExpectedConditions.presenceOfElementLocated(by));
-    Assert.assertNotNull("WebElement Not Presence", webElement);
-    return webElement;
-  }
-
-  public List<WebElement> findsByPresence(By by) {
-    logger.debug("Find Elements Presence {}", by.toString());
-    List<WebElement> webElements = webDriverWait
-        .until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-    Assert.assertNotNull("WebElement Not Presence", webElements);
-    return webElements;
-  }
-
-
   public WebElement findByCss(String css) {
     return find(By.cssSelector(css));
   }
@@ -157,204 +122,144 @@ public class StepImpl {
     return finds(By.xpath(xpath));
   }
 
-  public StepImpl checkElementVisible(WebElement webElement) {
-    Assert.assertTrue("WebElement Not Visible", webElement.isDisplayed());
-    return this;
+  public void checkElementVisible(By by) {
+    Assert.assertTrue("WebElement Not Visible", find(by).isDisplayed());
   }
 
-  public StepImpl checkElementVisible(List<WebElement> webElements, int index) {
-    return checkElementVisible(webElements.get(index));
+  @And("^Check element visible by id \"([^\"]*)\"$")
+  public void checkElementByIdVisible(String id) {
+    Assert.assertTrue("WebElement Not Visible", find(By.id(id)).isDisplayed());
   }
 
-  public StepImpl checkElementVisible(By by) {
-    return checkElementVisible(find(by));
+  @And("^Check element visible by css \"([^\"]*)\"$")
+  public void checkElementByCssVisible(String css) {
+    Assert.assertTrue("WebElement Not Visible", find(By.cssSelector(css)).isDisplayed());
   }
 
-  public StepImpl checkElementVisible(By by, int index) {
-    return checkElementVisible(finds(by).get(index));
+  @And("^Check element visible by xpath \"([^\"]*)\"$")
+  public void checkElementByXpathVisible(String xpath) {
+    Assert.assertTrue("WebElement Not Visible", find(By.xpath(xpath)).isDisplayed());
   }
 
-  public StepImpl checkElementEnable(WebElement webElement) {
-    Assert.assertTrue("WebElement Not Enable", webElement.isEnabled());
-    return this;
+  public void clickElement(By by) {
+    find(by).click();
   }
 
-  public StepImpl checkElementEnable(List<WebElement> webElements, int index) {
-    return checkElementEnable(webElements.get(index));
+  @And("^Click element by id \"([^\"]*)\"$")
+  public void clickElementById(String id) {
+    clickElement(By.id(id));
   }
 
-  public StepImpl checkElementEnable(By by) {
-    return checkElementEnable(find(by));
+  @And("^Click element by css \"([^\"]*)\"$")
+  public void clickElementByCss(String css) {
+    clickElement(By.cssSelector(css));
   }
 
-  public StepImpl checkElementEnable(By by, int index) {
-    return checkElementEnable(finds(by).get(index));
-  }
-
-  public void click(WebElement webElement) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    webElement.click();
-  }
-
-  public void click(List<WebElement> webElements, int index) {
-    click(webElements.get(index));
-  }
-
-  public void click(By by) {
-    click(find(by));
-  }
-
-  public void click(By by, int index) {
-    click(finds(by), index);
-  }
-
-  public void sendKeys(WebElement webElement, String text) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    webElement.sendKeys(text);
-  }
-
-  public void sendKeys(List<WebElement> webElements, int index, String text) {
-    sendKeys(webElements.get(index), text);
+  @And("^Click element by xpath \"([^\"]*)\"$")
+  public void clickElementByXpath(String xpath) {
+    clickElement(By.xpath(xpath));
   }
 
   public void sendKeys(By by, String text) {
-    sendKeys(find(by), text);
+    find(by).sendKeys(text);
   }
 
-  public void sendKeys(By by, int index, String text) {
-    sendKeys(finds(by), index, text);
+  @And("^Send keys to element by id \"([^\"]*)\" text \"([^\"]*)\"$")
+  public void sendKeysById(String id, String text) {
+    sendKeys(By.id(id), text);
   }
 
-  public void sendKeyCode(WebElement webElement, Keys keyCode) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    webElement.sendKeys(keyCode);
+  @And("^Send keys to element by css \"([^\"]*)\" text \"([^\"]*)\"$")
+  public void sendKeysByCss(String css, String text) {
+    sendKeys(By.cssSelector(css), text);
   }
 
-  public void sendKeyCode(By by, Keys keyCode) {
-    sendKeyCode(find(by), keyCode);
+  @And("^Send keys to element by xpath \"([^\"]*)\" text \"([^\"]*)\"$")
+  public void sendKeysByXpath(String xpath, String text) {
+    sendKeys(By.xpath(xpath), text);
   }
 
-  public Select createSelect(WebElement webElement) {
-    return new Select(webElement);
+  public void sendKeyCode(By by, String code) {
+    find(by).sendKeys(Keys.valueOf(code));
   }
 
-  public Select createSelect(By by) {
-    return new Select(find(by));
+  @And("^Send key code to element by id \"([^\"]*)\" code \"([^\"]*)\"$")
+  public void sendKeyCodeById(String id, String code) {
+    sendKeyCode(By.id(id), code);
   }
 
-  public void selectOptionsByVisibleText(WebElement webElement, String visibleText) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    createSelect(webElement)
-        .selectByVisibleText(visibleText);
+  @And("^Send key code to element by css \"([^\"]*)\" code \"([^\"]*)\"$")
+  public void sendKeyCodeByCss(String css, String code) {
+    sendKeyCode(By.cssSelector(css), code);
   }
 
-  public void selectOptionsByVisibleText(List<WebElement> webElements, int index,
-      String visibleText) {
-    selectOptionsByVisibleText(webElements.get(index), visibleText);
-  }
-
-  public void selectOptionsByVisibleText(By by, String visibleText) {
-    selectOptionsByVisibleText(find(by), visibleText);
-  }
-
-  public void selectOptionsByVisibleText(By by, int index, String visibleText) {
-    selectOptionsByVisibleText(finds(by), index, visibleText);
-  }
-
-  public void selectOptionsByValue(WebElement webElement, String visibleText) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    createSelect(webElement)
-        .selectByValue(visibleText);
-  }
-
-  public void selectOptionsByValue(By by, String visibleText) {
-    selectOptionsByValue(find(by), visibleText);
-  }
-
-  public void selectOptionsByIndex(WebElement webElement, int index) {
-    checkElementEnable(webElement)
-        .checkElementVisible(webElement);
-    createSelect(webElement)
-        .selectByIndex(index);
-  }
-
-  public void selectOptionsByIndex(By by, int index) {
-    selectOptionsByIndex(find(by), index);
+  @And("^Send key code to element by xpath \"([^\"]*)\" code \"([^\"]*)\"$")
+  public void sendKeyCodeByXpath(String xpath, String code) {
+    sendKeyCode(By.xpath(xpath), code);
   }
 
 
-  public void scrollTo(WebElement webElement) {
-    new Actions(webDriver)
-        .moveToElement(webElement)
-        .build()
-        .perform();
+  public void clearElement(By by) {
+    find(by).clear();
   }
 
-  public void scrollTo(By by) {
-    scrollTo(find(by));
+  @And("^Clear element by id \"([^\"]*)\"$")
+  public void clearElementById(String id) {
+    clearElement(By.id(id));
   }
 
-  public String getText(WebElement webElement) {
-    return webElement.getText();
+  @And("^Clear element by css \"([^\"]*)\"$")
+  public void clearElementByCss(String css) {
+    clearElement(By.cssSelector(css));
   }
 
-  public String getText(By by) {
-    return find(by).getText();
-  }
-
-  public String getAttribute(WebElement webElement, String attributeName) {
-    return webElement.getAttribute(attributeName);
-  }
-
-  public String getAttribute(By by, String attributeName) {
-    return find(by).getAttribute(attributeName);
-  }
-
-  public String getCssValue(WebElement webElement, String cssName) {
-    return webElement.getCssValue(cssName);
-  }
-
-  public String getCssValue(By by, String cssName) {
-    return find(by).getCssValue(cssName);
-  }
-
-  public String getTagName(WebElement webElement) {
-    return webElement.getTagName();
-  }
-
-  public String getTagName(By by) {
-    return find(by).getTagName();
+  @And("^Clear element by xpath \"([^\"]*)\"$")
+  public void clearElementByXpath(String xpath) {
+    clearElement(By.xpath(xpath));
   }
 
   public String getUrl() {
     return webDriver.getCurrentUrl();
   }
 
+  @And("^Url equals to \"([^\"]*)\"$")
+  public void checkUrlEquals(String url) {
+    Assert.assertEquals(url, getUrl());
+  }
+
   public String getPageSource() {
     return webDriver.getPageSource();
+  }
+
+  @And("^Print page source$")
+  public void printPageSource() {
+    logger.info(webDriver.getPageSource());
   }
 
   public String getPageTitle() {
     return webDriver.getTitle();
   }
 
+  @And("^Page title equals to \"([^\"]*)\"$")
+  public void checkPageTitleEquals(String title) {
+    Assert.assertEquals(title, getPageTitle());
+  }
+
   public Navigation getNavigation() {
     return webDriver.navigate();
   }
 
+  @And("^Refresh page$")
   public void refresh() {
     getNavigation().refresh();
   }
 
+  @And("^Navigate to forward$")
   public void forward() {
     getNavigation().forward();
   }
 
+  @And("^Navigate to back$")
   public void back() {
     getNavigation().back();
   }
@@ -368,39 +273,32 @@ public class StepImpl {
     getNavigation().to(url);
   }
 
-  public void quit() {
-    webDriver.quit();
-  }
-
+  @And("^Close$")
   public void close() {
     webDriver.close();
   }
 
-
+  @And("^Switch to main content$")
   public void switchToMainContent(String frameId) {
     webDriver.switchTo().defaultContent();
   }
 
+  @And("^Switch to parent frame$")
   public void switchToParentFrame() {
     webDriver.switchTo().parentFrame();
   }
 
-  public void switchToFrame(By by) {
-    webDriver.switchTo().frame(find(by));
-  }
-
+  @And("^Switch to frame by index \"([^\"]*)\"$")
   public void switchToFrameByIndex(int index) {
     webDriver.switchTo().frame(index);
   }
 
+  @And("^Switch to frame by id \"([^\"]*)\"$")
   public void switchToFrameById(String frameId) {
     webDriver.switchTo().frame(frameId);
   }
 
-  public void switchToFirstWindow(String windowName) {
-    webDriver.switchTo().window(webDriver.getWindowHandles().stream().findFirst().orElse(""));
-  }
-
+  @And("^Switch to window by name \"([^\"]*)\"$")
   public void switchToWindow(String windowName) {
     webDriver.switchTo().window(windowName);
   }
@@ -417,59 +315,56 @@ public class StepImpl {
     return currentIndex;
   }
 
+  @And("^Open next tab$")
   public void switchToNextTab() {
     switchToWindow(
         webDriver.getWindowHandles().stream().skip(getCurrentWindowIndex()).findFirst().orElse(""));
   }
 
+  @And("^Open prev tab$")
   public void switchToPrevTab() {
     switchToWindow(
         webDriver.getWindowHandles().stream().skip(getCurrentWindowIndex() - 1).findFirst()
             .orElse(""));
   }
 
+  @And("^Switch to alert$")
   public Alert switchToAlert() {
     Alert alert = webDriver.switchTo().alert();
     Assert.assertNotNull("Switchable Alert Not Found", alert);
     return alert;
   }
 
+  @And("^Accept alert$")
   public void acceptAlert() {
     switchToAlert().accept();
   }
 
+  @And("^Dismiss alert$")
   public void dismissAlert() {
     switchToAlert().dismiss();
   }
 
+  @And("^Send \"([^\"]*)\" to alert$")
   public void sendTextToAlert(String keys) {
     switchToAlert().sendKeys(keys);
-  }
-
-  public String getTextAlert(String keys) {
-    return switchToAlert().getText();
-  }
-
-  public void authenticateAlert(Credentials credentials) {
-    switchToAlert().authenticateUsing(credentials);
-  }
-
-  public void authenticateAlert(String username, String password) {
-    switchToAlert().authenticateUsing(new UserAndPassword(username, password));
   }
 
   public Options getOptions() {
     return webDriver.manage();
   }
 
+  @And("^Set page timeout \"([^\"]*)\" seconds$")
   public void setPageTimeOut(int pageTimeOut) {
     getOptions().timeouts().pageLoadTimeout(pageTimeOut, TimeUnit.SECONDS);
   }
 
+  @And("^Set script timeout \"([^\"]*)\" seconds$")
   public void setScriptTimeOut(int scriptTimeOut) {
     getOptions().timeouts().setScriptTimeout(scriptTimeOut, TimeUnit.SECONDS);
   }
 
+  @And("^Set implicitly wait \"([^\"]*)\" seconds$")
   public void setImplicitlyWait(int implicitlyWait) {
     getOptions().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
   }
@@ -479,14 +374,12 @@ public class StepImpl {
     getOptions().window().fullscreen();
   }
 
-  public void getCookie(String name) {
-    getOptions().getCookieNamed(name);
-  }
-
+  @And("^Add cookie name \"([^\"]*)\" value \"([^\"]*)\"$")
   public void addCookie(String cookieName, String cookieValue) {
     getOptions().addCookie(new Cookie(cookieName, cookieValue));
   }
 
+  @And("^Delete cookie by cookieName \"([^\"]*)\"")
   public void deleteCookie(String cookieName) {
     getOptions().deleteCookieNamed(cookieName);
   }
