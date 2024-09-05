@@ -15,9 +15,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 
 /**
- * The type Hooks.
- * This class sets driver, capabilities and some of options
- */
+* The type Hooks.
+* This class sets driver, capabilities and some of options
+*/
 public class BaseTest {
 
     protected static WebDriver driver;
@@ -25,53 +25,53 @@ public class BaseTest {
     public Logger logger = Logger.getLogger(getClass());
 
     /**
-     * Selected Browser name and platform, initialize capabilities
-     *
-     * @param capabilities
-     */
+    * Selected Browser name and platform, initialize capabilities
+    *
+    * @param capabilities
+    */
     String browserName = "chrome";
     DesiredCapabilities capabilities;
 
     /**
-     * @return the web driver
-     */
+    * @return the web driver
+    */
     public static WebDriver getWebDriver() {
         return driver;
     }
 
     /**
-     * Before test
-     * This method Checks testinium key and initialize the webdriver correctly from web_driver package
-     */
+    * Before test
+    * This method Checks testinium key and initialize the webdriver correctly from web_driver package
+    */
     @Before
     public void beforeTest() {
-        logger.info("************************************  BeforeScenario  ************************************");
-        try {
-            ChromeOptions options = new ChromeOptions();
-            capabilities = DesiredCapabilities.chrome();
-            options.setExperimentalOption("w3c", false);
-            options.addArguments("disable-translate");
-            options.addArguments("--disable-notifications");
-            options.addArguments("--start-fullscreen");
-            Map<String, Object> prefs = new HashMap<>();
-            options.setExperimentalOption("prefs", prefs);
-            capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-            capabilities.setCapability("key", System.getProperty("key"));
-            browserName = System.getenv("browser");
-            driver = new RemoteWebDriver(new URL("http://hub.testinium.io/wd/hub"), capabilities);
-            actions = new Actions(driver);
+    logger.info("************************************  BeforeScenario  ************************************");
+    try {
+        ChromeOptions options = new ChromeOptions();
+        capabilities = DesiredCapabilities.chrome();
+        options.setExperimentalOption("w3c", false);
+        options.addArguments("disable-translate");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--start-fullscreen");
+        Map<String, Object> prefs = new HashMap<>();
+        options.setExperimentalOption("prefs", prefs);
+        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        capabilities.setCapability("key", System.getProperty("key"));
+        browserName = System.getenv("browser");
+        driver = new RemoteWebDriver(new URL("http://hub.testinium.io/wd/hub"), capabilities);
+        actions = new Actions(driver);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * After test.
-     * Quit driver
-     */
+    * After test.
+    * Quit driver
+    */
     @After
     public void afterTest() {
         driver.quit();
     }
-
 }
+
