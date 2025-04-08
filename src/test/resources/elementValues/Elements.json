@@ -56,8 +56,8 @@
   },
   {
     "key": "searchbuttontext",
-    "value": "twotabsearchtextbox",
-    "type": "id"
+    "value": "//*[@id=\"twotabsearchtextbox\"]",
+    "type": "xpath"
   },
   {
     "key": "searchbutton",
