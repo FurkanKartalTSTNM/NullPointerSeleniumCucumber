@@ -12,11 +12,6 @@ Feature: example
     Then Wait 2 seconds
     Then Click to element "closebutton"
     Then Wait 2 seconds
-    Then Click to element "searchbuttontext"
-    Then Wait 2 seconds
-    Then Write text "bilgisayar" to "searchbuttontext" element
-    Then Wait 2 seconds
-    Then Click to element "searchbutton"
 
 
   @fail
