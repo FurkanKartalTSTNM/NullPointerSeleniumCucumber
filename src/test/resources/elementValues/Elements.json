@@ -52,7 +52,7 @@
   {
     "key": "closebutton",
     "value": ".a-button-close.a-declarative",
-    "type": "id"
+    "type": "css"
   },
   {
     "key": "searchbuttontext",
