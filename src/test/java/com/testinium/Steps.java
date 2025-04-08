@@ -30,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * The type Steps.
  */
-public class Steps {
+public class Steps extends BaseTest {
 
     /**
      * The Web driver.
@@ -353,6 +353,12 @@ public class Steps {
             hoverElement(findElement(key));
             clickElement(findElement(key));
         }
+    }
+
+    @And("Elemente Tikla id {string}")
+    public void elementineTıklaa(String key) {
+        WebElement element =driver.findElement(By.id(key));
+        element.click();
     }
 
     @Then("Wait {int} seconds")
