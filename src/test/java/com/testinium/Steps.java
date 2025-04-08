@@ -30,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * The type Steps.
  */
-public class Steps extends BaseTest {
+public class Steps {
 
     /**
      * The Web driver.
