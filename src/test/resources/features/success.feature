@@ -27,7 +27,7 @@ Feature: success
     Then Wait 2 seconds
 
   @success
-  Scenario: success01
+  Scenario: success02
     Given Go to "https://www.amazon.com.tr/"
     Then Wait 2 seconds
     Then Click to element "random"
