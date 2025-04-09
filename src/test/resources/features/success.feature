@@ -26,7 +26,7 @@ Feature: success
     Then Click to element "closebutton"
     Then Wait 2 seconds
 
-  @success
+  @success02
   Scenario: success02
     Given Go to "https://www.amazon.com.tr/"
     Then Wait 2 seconds
