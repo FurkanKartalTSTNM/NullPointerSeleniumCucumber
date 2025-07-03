@@ -1,8 +1,8 @@
 package com.testinium.model;
 
-import io.cucumber.messages.internal.com.google.gson.annotations.Expose;
-import io.cucumber.messages.internal.com.google.gson.annotations.SerializedName;
 
+import gherkin.deps.com.google.gson.annotations.Expose;
+import gherkin.deps.com.google.gson.annotations.SerializedName;
 
 /**
  * The Model of ElementInfo.
