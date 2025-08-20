@@ -23,7 +23,7 @@ Feature: success
     Then Wait 2 seconds
     Then Click to element "konumugüncelle"
     Then Wait 2 seconds
-    Then Click to element "closebuttonsss"
+    Then Click to element "closebutton"
     Then Wait 2 seconds
 
   @success02
