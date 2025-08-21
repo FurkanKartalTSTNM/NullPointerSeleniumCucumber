@@ -15,7 +15,7 @@ Feature: success
 
   @success01
   Scenario: success01
-    Given Go to "https://www.amazon.com.tr/"
+    Given Go to "https://www.amazon."
     Then Wait 2 seconds
     Then Click to element "random"
     Then Wait 2 seconds
