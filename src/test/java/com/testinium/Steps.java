@@ -347,19 +347,21 @@ public class Steps {
      *
      * @param key the key
      */
+
     @And("Click to element {string}")
     public void elementineTikla(String key) {
         WebElement element;
         try {
-            element = findElement(key); // 60 sn presence wait
+            element = findElement(key); // içinde 60 sn presence wait var
         } catch (TimeoutException e) {
-            Assert.assertFalse("Element is not visible", findElement(key).isDisplayed());
-
-            return;
+            // Element hiç bulunamadı → TEST FAIL
+            Assert.fail(key + " elementi belirtilen sürede bulunamadı: " + e.getMessage());
+            return; // teorik olarak fail zaten testi sonlandırır ama dursun
         }
 
         if (!element.isDisplayed()) {
-            Assert.assertFalse("Element is not visible", findElement(key).isDisplayed());
+            // Element bulundu ama görünür değil → TEST FAIL
+            Assert.fail(key + " elementi bulundu fakat görüntülenemiyor (isDisplayed=false).");
             return;
         }
 
