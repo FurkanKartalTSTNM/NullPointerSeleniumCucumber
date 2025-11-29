@@ -348,11 +348,23 @@ public class Steps {
      * @param key the key
      */
     @And("Click to element {string}")
-    public void elementineTıkla(String key) {
-        if (findElement(key).isDisplayed()) {
-            hoverElement(findElement(key));
-            clickElement(findElement(key));
+    public void elementineTikla(String key) {
+        WebElement element;
+        try {
+            element = findElement(key); // 60 sn presence wait
+        } catch (TimeoutException e) {
+            Assert.assertFalse("Element is not visible", findElement(key).isDisplayed());
+
+            return;
         }
+
+        if (!element.isDisplayed()) {
+            Assert.assertFalse("Element is not visible", findElement(key).isDisplayed());
+            return;
+        }
+
+        hoverElement(element);
+        clickElement(element);
     }
 
     @Then("Wait {int} seconds")
